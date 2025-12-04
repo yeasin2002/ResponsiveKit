@@ -33,18 +33,33 @@ importers:
       '@types/react-dom':
         specifier: ^19.1.9
         version: 19.2.3(@types/react@19.2.7)
+      '@unocss/preset-wind3':
+        specifier: ^66.5.10
+        version: 66.5.10
       '@wxt-dev/module-react':
         specifier: ^1.1.3
         version: 1.1.5(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1))(wxt@0.20.11(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.53.3))
       '@wxt-dev/unocss':
         specifier: ^1.0.1
         version: 1.0.1(unocss@66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)))(wxt@0.20.11(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.53.3))
+      class-variance-authority:
+        specifier: ^0.7.1
+        version: 0.7.1
+      lucide-react:
+        specifier: ^0.555.0
+        version: 0.555.0(react@19.2.1)
       typescript:
         specifier: ^5.9.2
         version: 5.9.3
       unocss:
         specifier: ^66.5.10
         version: 66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1))
+      unocss-preset-animations:
+        specifier: ^1.3.0
+        version: 1.3.0(@unocss/preset-wind3@66.5.10)(unocss@66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)))
+      unocss-preset-shadcn:
+        specifier: ^1.0.1
+        version: 1.0.1(unocss-preset-animations@1.3.0(@unocss/preset-wind3@66.5.10)(unocss@66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1))))(unocss@66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)))
       wxt:
         specifier: ^0.20.6
         version: 0.20.11(@types/node@24.10.1)(jiti@2.6.1)(rollup@4.53.3)
@@ -1047,6 +1062,9 @@ packages:
   citty@0.1.6:
     resolution: {integrity: sha512-tskPPKEs8D2KPafUypv2gxwJP8h/OaJmC82QQGGDQcHvXX43xF2VDACcJVmZ0EuSxkpO9Kc4MlrA3q0+FG58AQ==}
 
+  class-variance-authority@0.7.1:
+    resolution: {integrity: sha512-Ka+9Trutv7G8M6WT6SeiRWz792K5qEqIGEGzXKhAE6xOWAY6pPH8U+9IY3oCMv6kqTmLsv7Xh/2w2RigkePMsg==}
+
   cli-boxes@3.0.0:
     resolution: {integrity: sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g==}
     engines: {node: '>=10'}
@@ -1617,6 +1635,11 @@ packages:
   lru-cache@5.1.1:
     resolution: {integrity: sha512-KpNARQA3Iwv+jTA0utUVVbrh+Jlrr1Fv0e56GGzAFOXN7dk/FviaDW8LHmK52DlcH4WP2n6gI8vN1aesBFgo9w==}
 
+  lucide-react@0.555.0:
+    resolution: {integrity: sha512-D8FvHUGbxWBRQM90NZeIyhAvkFfsh3u9ekrMvJ30Z6gnpBHS6HC6ldLg7tL45hwiIz/u66eKDtdA23gwwGsAHA==}
+    peerDependencies:
+      react: ^16.5.1 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   magic-string@0.30.21:
     resolution: {integrity: sha512-vd2F4YUyEXKGcLHoq+TEyCjxueSeHnFxyyjNp80yg0XV4vUhnDer/lvvlqM/arB5bXQN5K2/3oinyCRyx8T2CQ==}
 
@@ -2125,6 +2148,21 @@ packages:
   universalify@2.0.1:
     resolution: {integrity: sha512-gptHNQghINnc/vTGIk0SOFGFNXw7JVrlRUtConJRlvaw6DuX0wO5Jeko9sWrMBhh+PsYAZ7oXAiOnf/UKogyiw==}
     engines: {node: '>= 10.0.0'}
+
+  unocss-preset-animations@1.3.0:
+    resolution: {integrity: sha512-NLsBzPB98Jc8b6+t8nwLItI12ZE/48IZVccZ2uA2owLoeAvhRaDoRvs6eLcJfIUZfRycL25xxOeQoOBMo1p/aw==}
+    peerDependencies:
+      '@unocss/preset-wind3': '>=0.56.0 < 101'
+      unocss: '>=0.56.0 < 101'
+    peerDependenciesMeta:
+      '@unocss/preset-wind3':
+        optional: true
+
+  unocss-preset-shadcn@1.0.1:
+    resolution: {integrity: sha512-/I39ZO2ntPyRHz+VA8pa+E/empR4sJU//zMjgI0ph5c5LttRs84gcm74pz/wO+sfqMjjN4SbSScD2n+TfE4FHw==}
+    peerDependencies:
+      unocss: '>=0.56.0 < 101'
+      unocss-preset-animations: ^1.1.1
 
   unocss@66.5.10:
     resolution: {integrity: sha512-h3OjHVKsYFiet7ZSgxD6+odC1bpx+N0JYP2bWy/vcqjrApaZmYg4CKmvxCFNxw1+qVoxyfhhjcVZHGUpf9jaKA==}
@@ -3288,6 +3326,10 @@ snapshots:
     dependencies:
       consola: 3.4.2
 
+  class-variance-authority@0.7.1:
+    dependencies:
+      clsx: 2.1.1
+
   cli-boxes@3.0.0: {}
 
   cli-cursor@5.0.0:
@@ -3785,6 +3827,10 @@ snapshots:
   lru-cache@5.1.1:
     dependencies:
       yallist: 3.1.1
+
+  lucide-react@0.555.0(react@19.2.1):
+    dependencies:
+      react: 19.2.1
 
   magic-string@0.30.21:
     dependencies:
@@ -4324,6 +4370,17 @@ snapshots:
       unplugin-utils: 0.3.1
 
   universalify@2.0.1: {}
+
+  unocss-preset-animations@1.3.0(@unocss/preset-wind3@66.5.10)(unocss@66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1))):
+    dependencies:
+      unocss: 66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1))
+    optionalDependencies:
+      '@unocss/preset-wind3': 66.5.10
+
+  unocss-preset-shadcn@1.0.1(unocss-preset-animations@1.3.0(@unocss/preset-wind3@66.5.10)(unocss@66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1))))(unocss@66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1))):
+    dependencies:
+      unocss: 66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1))
+      unocss-preset-animations: 1.3.0(@unocss/preset-wind3@66.5.10)(unocss@66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)))
 
   unocss@66.5.10(postcss@8.5.6)(vite@7.2.6(@types/node@24.10.1)(jiti@2.6.1)):
     dependencies:
