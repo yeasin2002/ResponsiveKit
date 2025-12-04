@@ -1,15 +1,17 @@
-"use client"
-
-import { useState } from "react"
+import { useState } from "react";
 
 interface DevToolProps {
-  version?: string
-  errorCount?: number
-  routeType?: "Static" | "Dynamic"
+  version?: string;
+  errorCount?: number;
+  routeType?: "Static" | "Dynamic";
 }
 
-export function NextJsDevTool({ version = "v13.4.8", errorCount = 3, routeType = "Static" }: DevToolProps) {
-  const [isHovered, setIsHovered] = useState(false)
+export function DevTool({
+  version = "v13.4.8",
+  errorCount = 3,
+  routeType = "Static",
+}: DevToolProps) {
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
     <div
@@ -20,7 +22,9 @@ export function NextJsDevTool({ version = "v13.4.8", errorCount = 3, routeType =
       {/* Popup Panel */}
       <div
         className={`absolute bottom-full left-0 mb-3 w-56 origin-bottom transition-all duration-200 ease-out ${
-          isHovered ? "scale-100 opacity-100 translate-y-0" : "scale-95 opacity-0 translate-y-2 pointer-events-none"
+          isHovered
+            ? "scale-100 opacity-100 translate-y-0"
+            : "scale-95 opacity-0 translate-y-2 pointer-events-none"
         }`}
       >
         <div className="rounded-xl bg-[#1a1a1a] p-4 shadow-xl">
@@ -55,7 +59,12 @@ export function NextJsDevTool({ version = "v13.4.8", errorCount = 3, routeType =
         }`}
         aria-label="Next.js Dev Tool"
       >
-        <svg className="w-5 h-5" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg
+          className="w-5 h-5"
+          viewBox="0 0 180 180"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <mask
             id="mask0_408_134"
             style={{ maskType: "alpha" }}
@@ -73,7 +82,13 @@ export function NextJsDevTool({ version = "v13.4.8", errorCount = 3, routeType =
               d="M149.508 157.52L69.142 54H54V125.97H66.1136V69.3836L139.999 164.845C143.333 162.614 146.509 160.165 149.508 157.52Z"
               fill="url(#paint0_linear_408_134)"
             />
-            <rect x="115" y="54" width="12" height="72" fill="url(#paint1_linear_408_134)" />
+            <rect
+              x="115"
+              y="54"
+              width="12"
+              height="72"
+              fill="url(#paint1_linear_408_134)"
+            />
           </g>
           <defs>
             <linearGradient
@@ -102,5 +117,5 @@ export function NextJsDevTool({ version = "v13.4.8", errorCount = 3, routeType =
         </svg>
       </button>
     </div>
-  )
+  );
 }
