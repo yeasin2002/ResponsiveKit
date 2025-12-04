@@ -21,7 +21,7 @@ export function DevTool({
     <Popover>
       <PopoverTrigger asChild>
         <button
-          className="flex items-center justify-center size-10 rounded-full border-2 border-black bg-white transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95"
+          className=" flex items-center justify-center size-10 rounded-full border-2 border-black bg-white transition-all duration-200 hover:scale-110 hover:shadow-lg active:scale-95"
           aria-label="Next.js Dev Tool"
         >
           <svg
@@ -87,7 +87,8 @@ export function DevTool({
         side="top"
         align="start"
         sideOffset={12}
-        className="w-56 p-4 rounded-xl bg-[#1a1a1a] border-0 shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+        className="w-56 p-4 rounded-xl border-0 shadow-xl animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+        style={{ backgroundColor: "black" }}
       >
         {/* Header */}
         <div className="flex items-center justify-between mb-3">
