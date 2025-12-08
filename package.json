@@ -15,10 +15,12 @@
     "compile": "tsc --noEmit",
     "postinstall": "wxt prepare",
     "clean": "wxt clean",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix",
-    "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "lint": "biome lint .",
+    "lint:fix": "biome lint . --write",
+    "format": "biome format . --write",
+    "format:check": "biome format .",
+    "check": "biome check .",
+    "check:fix": "biome check . --write"
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-rc.0",
