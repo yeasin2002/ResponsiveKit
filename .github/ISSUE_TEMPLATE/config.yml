@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or Discussion
+    url: https://github.com/yeasin2002/breakpoint-indicator/discussions
+    about: Ask questions or start discussions about the project
+  - name: Contributing Guide
+    url: https://github.com/yeasin2002/breakpoint-indicator/blob/main/CONTRIBUTING.md
+    about: Learn how to contribute to this project
