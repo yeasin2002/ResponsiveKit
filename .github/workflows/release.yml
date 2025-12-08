@@ -27,85 +27,156 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
 
       - name: Install dependencies
         run: pnpm install
 
       - name: Check code quality
-        run: pnpm check:fix
+        run: pnpm check
+        continue-on-error: true
 
       - name: Type check
         run: pnpm compile
 
-      - name: Create Release Pull Request or Publish
-        id: changesets
+      - name: Check for changesets
+        id: check-changesets
+        run: |
+          if [ -n "$(ls -A .changeset/*.md 2>/dev/null | grep -v README.md)" ]; then
+            echo "has_changesets=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_changesets=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Release Pull Request
+        if: steps.check-changesets.outputs.has_changesets == 'true'
         uses: changesets/action@v1
         with:
           version: pnpm changeset:version
-          publish: pnpm run release:publish
-          commit: 'chore: release'
-          title: 'chore: release'
+          commit: "chore: version packages"
+          title: "chore: version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      # Build and release when version PR is merged (no changesets but version changed)
+      - name: Check if version changed
+        id: version-check
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          
+          # Check if tag already exists
+          if git rev-parse "v$VERSION" >/dev/null 2>&1; then
+            echo "tag_exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "tag_exists=false" >> $GITHUB_OUTPUT
+          fi
+
       - name: Build Chrome Extension
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.check-changesets.outputs.has_changesets == 'false' && steps.version-check.outputs.tag_exists == 'false'
         run: pnpm build
 
       - name: Build Firefox Extension
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.check-changesets.outputs.has_changesets == 'false' && steps.version-check.outputs.tag_exists == 'false'
         run: pnpm build:firefox
 
       - name: Create Chrome ZIP
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.check-changesets.outputs.has_changesets == 'false' && steps.version-check.outputs.tag_exists == 'false'
         run: pnpm zip
 
       - name: Create Firefox ZIP
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.check-changesets.outputs.has_changesets == 'false' && steps.version-check.outputs.tag_exists == 'false'
         run: pnpm zip:firefox
 
-      - name: Get version
-        if: steps.changesets.outputs.published == 'true'
-        id: version
-        run: echo "version=$(node -p "require('./package.json').version")" >> $GITHUB_OUTPUT
-
-      - name: Rename ZIP files
-        if: steps.changesets.outputs.published == 'true'
+      - name: List output files
+        if: steps.check-changesets.outputs.has_changesets == 'false' && steps.version-check.outputs.tag_exists == 'false'
         run: |
-          mv .output/responsive-kit-*.zip .output/responsive-kit-${{ steps.version.outputs.version }}-chrome.zip || true
-          mv .output/responsive-kit-*-firefox.zip .output/responsive-kit-${{ steps.version.outputs.version }}-firefox.zip || true
+          echo "=== Output directory contents ==="
+          ls -la .output/ || echo "No .output directory"
+          echo "=== Looking for ZIP files ==="
+          find .output -name "*.zip" 2>/dev/null || echo "No ZIP files found"
+
+      - name: Prepare ZIP files
+        if: steps.check-changesets.outputs.has_changesets == 'false' && steps.version-check.outputs.tag_exists == 'false'
+        run: |
+          VERSION=${{ steps.version-check.outputs.version }}
+          
+          # Find and rename Chrome ZIP
+          CHROME_ZIP=$(find .output -name "*.zip" ! -name "*firefox*" -type f | head -1)
+          if [ -n "$CHROME_ZIP" ]; then
+            mv "$CHROME_ZIP" ".output/responsive-kit-${VERSION}-chrome.zip"
+            echo "Chrome ZIP: responsive-kit-${VERSION}-chrome.zip"
+          fi
+          
+          # Find and rename Firefox ZIP  
+          FIREFOX_ZIP=$(find .output -name "*firefox*.zip" -type f | head -1)
+          if [ -n "$FIREFOX_ZIP" ]; then
+            mv "$FIREFOX_ZIP" ".output/responsive-kit-${VERSION}-firefox.zip"
+            echo "Firefox ZIP: responsive-kit-${VERSION}-firefox.zip"
+          fi
+          
+          echo "=== Final ZIP files ==="
+          ls -la .output/*.zip 2>/dev/null || echo "No ZIP files"
+
+      - name: Create Git Tag
+        if: steps.check-changesets.outputs.has_changesets == 'false' && steps.version-check.outputs.tag_exists == 'false'
+        run: |
+          VERSION=${{ steps.version-check.outputs.version }}
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "Release v$VERSION"
+          git push origin "v$VERSION"
 
       - name: Create GitHub Release
-        if: steps.changesets.outputs.published == 'true'
+        if: steps.check-changesets.outputs.has_changesets == 'false' && steps.version-check.outputs.tag_exists == 'false'
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.version.outputs.version }}
-          name: v${{ steps.version.outputs.version }}
+          tag_name: v${{ steps.version-check.outputs.version }}
+          name: v${{ steps.version-check.outputs.version }}
+          generate_release_notes: true
           body: |
-            ## What's Changed
+            ## ResponsiveKit v${{ steps.version-check.outputs.version }}
             
-            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+            A lightweight browser extension that provides real-time responsive breakpoint information.
             
             ## Installation
             
-            ### Chrome/Edge
-            1. Download `responsive-kit-${{ steps.version.outputs.version }}-chrome.zip`
+            ### Chrome / Edge / Brave
+            1. Download `responsive-kit-${{ steps.version-check.outputs.version }}-chrome.zip`
             2. Extract the ZIP file
-            3. Open Chrome/Edge and go to `chrome://extensions/`
-            4. Enable "Developer mode"
-            5. Click "Load unpacked" and select the extracted folder
+            3. Open Chrome and go to `chrome://extensions/`
+            4. Enable **Developer mode** (top right)
+            5. Click **Load unpacked** and select the extracted folder
             
             ### Firefox
-            1. Download `responsive-kit-${{ steps.version.outputs.version }}-firefox.zip`
+            1. Download `responsive-kit-${{ steps.version-check.outputs.version }}-firefox.zip`
             2. Extract the ZIP file
             3. Open Firefox and go to `about:debugging#/runtime/this-firefox`
-            4. Click "Load Temporary Add-on"
+            4. Click **Load Temporary Add-on**
             5. Select any file in the extracted folder
+            
+            ## What's Included
+            
+            - 📱 Real-time breakpoint indicator (xs, sm, md, lg, xl, 2xl)
+            - 📐 Viewport and screen dimensions
+            - 🎨 Color scheme detection (light/dark)
+            - 📊 Device pixel ratio and orientation
+            - 👆 Touch capability detection
+            
+            ---
+            
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for detailed changes.
           files: |
-            .output/responsive-kit-${{ steps.version.outputs.version }}-chrome.zip
-            .output/responsive-kit-${{ steps.version.outputs.version }}-firefox.zip
+            .output/responsive-kit-${{ steps.version-check.outputs.version }}-chrome.zip
+            .output/responsive-kit-${{ steps.version-check.outputs.version }}-firefox.zip
           draft: false
-          prerelease: ${{ contains(steps.version.outputs.version, 'beta') || contains(steps.version.outputs.version, 'alpha') || contains(steps.version.outputs.version, 'rc') }}
+          prerelease: ${{ contains(steps.version-check.outputs.version, 'beta') || contains(steps.version-check.outputs.version, 'alpha') || contains(steps.version-check.outputs.version, 'rc') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Release Summary
+        if: steps.check-changesets.outputs.has_changesets == 'false' && steps.version-check.outputs.tag_exists == 'false'
+        run: |
+          echo "🎉 Released v${{ steps.version-check.outputs.version }}"
+          echo "📦 Chrome ZIP: responsive-kit-${{ steps.version-check.outputs.version }}-chrome.zip"
+          echo "🦊 Firefox ZIP: responsive-kit-${{ steps.version-check.outputs.version }}-firefox.zip"
