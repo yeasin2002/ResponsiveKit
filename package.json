@@ -5,6 +5,18 @@
   "private": true,
   "version": "0.1.0-beta.1",
   "type": "module",
+  "author": {
+    "name": "yeasin2002",
+    "url": "https://github.com/yeasin2002"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yeasin2002/ResponsiveKit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yeasin2002/ResponsiveKit/issues"
+  },
+  "homepage": "https://github.com/yeasin2002/ResponsiveKit#readme",
   "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev": "wxt",
@@ -28,7 +40,8 @@
     "changeset:version": "changeset version",
     "changeset:publish": "changeset publish",
     "release": "pnpm check:fix && pnpm compile && pnpm build && pnpm changeset:version",
-    "release:publish": "echo 'Publishing to GitHub Releases'"
+    "release:publish": "echo 'Publishing to GitHub Releases'",
+    "prepare": "husky"
   },
   "dependencies": {
     "@base-ui-components/react": "1.0.0-rc.0",
@@ -52,7 +65,9 @@
     "@wxt-dev/unocss": "^1.0.1",
     "class-variance-authority": "^0.7.1",
     "globals": "^16.2.0",
+    "husky": "^9.1.7",
     "knip": "^5.72.0",
+    "lint-staged": "^16.2.7",
     "lucide-react": "^0.555.0",
     "prettier": "^3.7.4",
     "typescript": "^5.9.2",
@@ -61,4 +76,5 @@
     "unocss-preset-shadcn": "^1.0.1",
     "wxt": "^0.20.6"
   }
+
 }
