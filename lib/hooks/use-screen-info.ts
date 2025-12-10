@@ -1,5 +1,5 @@
-import { getBreakpoint, type BreakpointKey } from "@/lib/breakpoints";
 import { useEffect, useState } from "react";
+import { type BreakpointKey, getBreakpoint } from "@/lib/breakpoints";
 
 export interface ScreenInfo {
 	viewportWidth: number;

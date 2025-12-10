@@ -1,6 +1,7 @@
 /* eslint-disable react-refresh/only-export-components */
-import { DevTool } from "@/components/dev-tool";
+
 import ReactDOM from "react-dom/client";
+import { DevTool } from "@/components/dev-tool";
 import "virtual:uno.css";
 
 export default defineContentScript({
